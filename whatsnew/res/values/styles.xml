@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <style name="Theme.WhatsNew" parent="Theme.Sherlock.Light">
+
+    <item name="android:editTextStyle">@style/EditTextwn</item>
+    <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextViewwn</item>
+    <item name="android:checkboxStyle">@style/CheckBoxwn</item>
+    <item name="android:buttonStyle">@style/Buttonwn</item>
+    <item name="android:imageButtonStyle">@style/ImageButtonwn</item>
+    <item name="android:spinnerStyle">@style/Spinnerwn</item>
+    <item name="android:dropDownSpinnerStyle">@style/Spinnerwn.DropDown</item>
+    <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItemwn</item>
+    <item name="android:progressBarStyleHorizontal">@style/ProgressBarwn</item>
+
+    <item name="actionBarItemBackground">@drawable/selectable_background_wn</item>
+    <item name="popupMenuStyle">@style/wn_PopupMenu</item>
+    <item name="dropDownListViewStyle">@style/wn_DropDownListView</item>
+    <item name="actionBarTabStyle">@style/wn_ActionBarTabStyle</item>
+    <item name="actionDropDownStyle">@style/wn_DropDownNav</item>
+    <item name="actionBarStyle">@style/wn_solid_ActionBar</item>
+
+    <item name="android:actionBarItemBackground">@drawable/selectable_background_wn</item>
+    <item name="android:popupMenuStyle">@style/wn_PopupMenu</item>
+    <item name="android:dropDownListViewStyle">@style/wn_DropDownListView</item>
+    <item name="android:actionBarTabStyle">@style/wn_ActionBarTabStyle</item>
+    <item name="android:actionDropDownStyle">@style/wn_DropDownNav</item>
+    <item name="android:actionBarStyle">@style/wn_solid_ActionBar</item>
+    <item name="android:panelBackground">@drawable/menu_hardkey_panel_wn</item>
+
+    <item name="android:editTextBackground">@drawable/edit_text_holo_light</item>
+    <item name="android:listChoiceIndicatorMultiple">@drawable/btn_check_holo_light</item>
+    <item name="android:dropDownSpinnerStyle">@style/Spinnerwn</item>
+    <item name="android:fastScrollThumbDrawable">@drawable/fastscroll_thumb_holo</item>
+
+    <item name="android:actionBarItemBackground">@drawable/selectable_background_wn</item>
+    <item name="android:popupMenuStyle">@style/wn_PopupMenu</item>
+    <item name="android:dropDownListViewStyle">@style/wn_DropDownListView</item>
+    <item name="android:actionBarTabStyle">@style/wn_ActionBarTabStyle</item>
+    <item name="android:actionDropDownStyle">@style/wn_DropDownNav</item>
+    <item name="android:actionBarStyle">@style/wn_solid_ActionBar</item>
+    <item name="android:panelBackground">@drawable/menu_hardkey_panel_wn</item>
+  </style>
+    <style name="wn_solid_ActionBar" parent="@style/Widget.Sherlock.Light.ActionBar.Solid">
+        <item name="background">@drawable/ab_solid_wn</item>
+        <item name="backgroundStacked">@drawable/ab_stacked_solid_wn</item>
+        <item name="backgroundSplit">@drawable/ab_bottom_solid_wn</item>
+        <item name="progressBarStyle">@style/wn_ProgressBar</item>
+
+        <item name="android:background">@drawable/ab_solid_wn</item>
+        <item name="android:backgroundStacked">@drawable/ab_stacked_solid_wn</item>
+        <item name="android:backgroundSplit">@drawable/ab_bottom_solid_wn</item>
+        <item name="android:progressBarStyle">@style/wn_ProgressBar</item>
+    </style>
+
+    <style name="wn_transparent_ActionBar" parent="@style/Widget.Sherlock.Light.ActionBar">
+        <item name="background">@drawable/ab_transparent_wn</item>
+        <item name="progressBarStyle">@style/wn_ProgressBar</item>
+
+        <item name="android:background">@drawable/ab_transparent_wn</item>
+        <item name="android:progressBarStyle">@style/wn_ProgressBar</item>
+    </style>
+
+    <style name="wn_PopupMenu" parent="@style/Widget.Sherlock.Light.ListPopupWindow">
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_wn</item>
+    </style>
+
+    <style name="wn_DropDownListView" parent="@style/Widget.Sherlock.Light.ListView.DropDown">
+        <item name="android:listSelector">@drawable/selectable_background_wn</item>
+    </style>
+
+    <style name="wn_ActionBarTabStyle" parent="@style/Widget.Sherlock.Light.ActionBar.TabView">
+        <item name="background">@drawable/tab_indicator_ab_wn</item>
+
+        <item name="android:background">@drawable/tab_indicator_ab_wn</item>
+    </style>
+
+    <style name="wn_DropDownNav" parent="@style/Widget.Sherlock.Light.Spinner.DropDown.ActionBar">
+        <item name="background">@drawable/spinner_background_ab_wn</item>
+
+        <item name="android:background">@drawable/spinner_background_ab_wn</item>
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_wn</item>
+        <item name="android:dropDownSelector">@drawable/selectable_background_wn</item>
+    </style>
+
+    <style name="wn_ProgressBar" parent="@style/Widget.Sherlock.Light.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/progress_horizontal_wn</item>
+    </style>
+
+    <!-- this style is only referenced in a Light.DarkActionBar based theme -->
+    <style name="Theme.wn.widget" parent="@style/Theme.Sherlock">
+        <item name="popupMenuStyle">@style/wn_PopupMenu</item>
+        <item name="dropDownListViewStyle">@style/wn_DropDownListView</item>
+
+        <item name="android:popupMenuStyle">@style/wn_PopupMenu</item>
+        <item name="android:dropDownListViewStyle">@style/wn_DropDownListView</item>
+    </style>
+
+    <style name="EditTextwn" parent="android:Widget.EditText">
+  	  <item name="android:background">@drawable/edit_text_holo_light</item>
+  	  <item name="android:textColor">#000000</item>
+    </style>
+
+    <style name="AutoCompleteTextViewwn" parent="android:Widget.AutoCompleteTextView">
+        <item name="android:dropDownSelector">@drawable/list_selector_holo_light</item>
+  	  <item name="android:background">@drawable/edit_text_holo_light</item>
+  	  <item name="android:textColor">#000000</item>
+    </style>
+
+    <style name="CheckBoxwn" parent="android:Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/btn_check_holo_light</item>
+    </style>
+
+    <style name="Buttonwn" parent="android:Widget.Button">
+  	  <item name="android:background">@drawable/btn_default_holo_light</item>
+  	  <item name="android:minHeight">48dip</item>
+  	  <item name="android:minWidth">64dip</item>
+  	  <item name="android:textColor">#000000</item>
+    </style>
+
+    <style name="ImageButtonwn" parent="android:Widget.ImageButton">
+  	  <item name="android:background">@drawable/btn_default_holo_light</item>
+    </style>
+
+    <style name="Spinnerwn" parent="android:Widget.Spinner">
+        <item name="android:background">@drawable/spinner_background_holo_light</item>
+        <item name="android:dropDownSelector">@drawable/list_selector_holo_light</item>
+    </style>
+
+    <style name="Spinnerwn.DropDown">
+        <item name="android:spinnerMode">dropdown</item>
+    </style>
+
+    <style name="SpinnerDropDownItemwn" parent="android:Widget.DropDownItem.Spinner">
+        <item name="android:checkMark">@drawable/btn_radio_holo_light</item>
+    </style>
+    <style name="ProgressBarwn" parent="android:Widget.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/progress_horizontal_holo_light</item>
+        <item name="android:indeterminateDrawable">@drawable/progress_indeterminate_horizontal_holo_light</item>
+        <item name="android:minHeight">16dip</item>
+        <item name="android:maxHeight">16dip</item>
+    </style>
+
+
+
+</resources>

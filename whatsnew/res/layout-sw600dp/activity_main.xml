@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:orientation="horizontal">
+  <fragment
+      android:id="@id/fragment_app_list"
+      android:name="info.evelio.whatsnew.fragment.AppListFragment"
+      android:layout_width="@dimen/width_multipane_small"
+      android:layout_height="match_parent"/>
+  <fragment
+        android:id="@id/fragment_app_detail"
+        android:name="info.evelio.whatsnew.fragment.DetailFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>

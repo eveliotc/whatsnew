@@ -29,6 +29,8 @@
       android:icon="@drawable/ic_launcher"
       android:label="@string/app_name"
       android:theme="@style/Theme.WhatsNew"
+      android:hardwareAccelerated="true"
+      android:largeHeap="true"
       >
     <activity
         android:name=".activity.MainActivity"
@@ -45,6 +47,21 @@
         android:configChanges="orientation|keyboardHidden|keyboard|screenLayout|touchscreen|screenSize|smallestScreenSize"
         android:label="@string/app_name"
         />
+    <receiver
+        android:name=".receiver.PackageReceiver"
+        android:enabled="true"
+        android:exported="true">
+      <intent-filter>
+        <action android:name="android.intent.action.PACKAGE_ADDED"/>
+        <action android:name="android.intent.action.PACKAGE_REMOVED"/>
+        <action android:name="android.intent.action.PACKAGE_CHANGED"/>
+        <data android:scheme="package"/>
+      </intent-filter>
+      <intent-filter>
+        <action android:name="android.intent.action.EXTERNAL_APPLICATIONS_AVAILABLE"/>
+        <action android:name="android.intent.action.EXTERNAL_APPLICATIONS_UNAVAILABLE"/>
+      </intent-filter>
+    </receiver>
   </application>
 
 </manifest>

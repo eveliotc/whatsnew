@@ -44,6 +44,12 @@
       <version>0.9.23</version>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>com.github.kevinsawicki</groupId>
+      <artifactId>wishlist</artifactId>
+      <version>0.8</version>
+      <type>apklib</type>
+    </dependency>
   </dependencies>
   <build>
     <plugins>

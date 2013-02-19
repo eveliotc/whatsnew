@@ -2,10 +2,7 @@ package info.evelio.whatsnew.activity;
 
 import android.os.Bundle;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.codeslap.groundy.Groundy;
 import info.evelio.whatsnew.R;
-import info.evelio.whatsnew.helper.PrefsHelper;
-import info.evelio.whatsnew.task.CurrentAppsImporter;
 
 /**
  * Main activity.
@@ -26,11 +23,6 @@ public class MainActivity extends SherlockFragmentActivity {
     super.onCreate(savedInstanceState);
 
     setContentView(R.layout.activity_main);
-
-    final PrefsHelper prefsHelper = new PrefsHelper(getApplicationContext());
-    if (!prefsHelper.getBool(PrefsHelper.BOOLEAN_FIRST_IMPORT_DONE)) {
-      Groundy.create(getApplicationContext(), CurrentAppsImporter.class).execute();
-    }
   }
 
 }

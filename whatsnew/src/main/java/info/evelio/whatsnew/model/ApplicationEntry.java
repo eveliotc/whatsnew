@@ -4,7 +4,9 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageItemInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.drawable.Drawable;
 import com.codeslap.persistence.Column;
+import com.codeslap.persistence.Ignore;
 import com.codeslap.persistence.PrimaryKey;
 import com.codeslap.persistence.Table;
 import info.evelio.whatsnew.util.AppUtils;
@@ -30,6 +32,10 @@ public class ApplicationEntry {
   private long firstInstallTime;
   @Column(Contract.COLUMN_LAST_UPDATE_TIME)
   private long lastUpdateTime;
+  @Ignore
+  private CharSequence label;
+  @Ignore
+  private Drawable icon;
 
   /**
    * Creates an empty instance
@@ -87,6 +93,22 @@ public class ApplicationEntry {
     this.lastUpdateTime = lastUpdateTime;
   }
 
+  public CharSequence getLabel() {
+    return label;
+  }
+
+  public void setLabel(CharSequence label) {
+    this.label = label;
+  }
+
+  public Drawable getIcon() {
+    return icon;
+  }
+
+  public void setIcon(Drawable icon) {
+    this.icon = icon;
+  }
+
   @Override
   public String toString() {
     return "ApplicationEntry{" +
@@ -95,6 +117,8 @@ public class ApplicationEntry {
         ", packageVersionCode=" + packageVersionCode +
         ", firstInstallTime=" + firstInstallTime +
         ", lastUpdateTime=" + lastUpdateTime +
+        ", label='" + label + '\'' +
+        ", icon=" + icon +
         '}';
   }
 

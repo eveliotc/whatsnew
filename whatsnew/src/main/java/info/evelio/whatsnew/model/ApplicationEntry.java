@@ -4,11 +4,11 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageItemInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.util.Log;
 import com.codeslap.persistence.Column;
 import com.codeslap.persistence.PrimaryKey;
 import com.codeslap.persistence.Table;
 import info.evelio.whatsnew.util.AppUtils;
+import info.evelio.whatsnew.util.L;
 import info.evelio.whatsnew.util.StringUtils;
 
 /**
@@ -19,16 +19,16 @@ public class ApplicationEntry {
   /**
    * Package name
    */
-  @PrimaryKey
-  @Column(ApplicationEntry.Contract.COLUMN_PACKAGE_NAME)
+  @PrimaryKey(autoincrement = false)
+  @Column(Contract.COLUMN_PACKAGE_NAME)
   private String packageName;
-  @Column(ApplicationEntry.Contract.COLUMN_PACKAGE_VERSION)
+  @Column(Contract.COLUMN_PACKAGE_VERSION)
   private String packageVersion;
-  @Column(ApplicationEntry.Contract.COLUMN_PACKAGE_VERSION_CODE)
+  @Column(Contract.COLUMN_PACKAGE_VERSION_CODE)
   private long packageVersionCode;
-  @Column(ApplicationEntry.Contract.COLUMN_FIRST_INSTALL_TIME)
+  @Column(Contract.COLUMN_FIRST_INSTALL_TIME)
   private long firstInstallTime;
-  @Column(ApplicationEntry.Contract.COLUMN_LAST_UPDATE_TIME)
+  @Column(Contract.COLUMN_LAST_UPDATE_TIME)
   private long lastUpdateTime;
 
   /**
@@ -39,8 +39,8 @@ public class ApplicationEntry {
 
   /**
    * Retrieve current package name
-   * @return
-   * Current package name value might be null
+   *
+   * @return Current package name value might be null
    */
   public final String getPackageName() {
     return packageName;
@@ -48,8 +48,8 @@ public class ApplicationEntry {
 
   /**
    * Sets package name to given value
-   * @param givenPackageName
-   * Package name to set to
+   *
+   * @param givenPackageName Package name to set to
    */
   public final void setPackageName(final String givenPackageName) {
     this.packageName = givenPackageName;
@@ -87,6 +87,17 @@ public class ApplicationEntry {
     this.lastUpdateTime = lastUpdateTime;
   }
 
+  @Override
+  public String toString() {
+    return "ApplicationEntry{" +
+        "packageName='" + packageName + '\'' +
+        ", packageVersion='" + packageVersion + '\'' +
+        ", packageVersionCode=" + packageVersionCode +
+        ", firstInstallTime=" + firstInstallTime +
+        ", lastUpdateTime=" + lastUpdateTime +
+        '}';
+  }
+
   public interface Contract {
     /**
      * Table name
@@ -104,12 +115,10 @@ public class ApplicationEntry {
 
   /**
    * Create a new instance mapping given info
-   * @param pm
-   * Package manager to use
-   * @param resolvedInfo
-   * Info to use
-   * @return
-   * New instance mapped from given info or null if given info is invalid
+   *
+   * @param pm           Package manager to use
+   * @param resolvedInfo Info to use
+   * @return New instance mapped from given info or null if given info is invalid
    */
   public static ApplicationEntry from(final PackageManager pm, final ResolveInfo resolvedInfo) {
     if (resolvedInfo == null) {
@@ -126,12 +135,10 @@ public class ApplicationEntry {
 
   /**
    * Create a new instance mapping given info
-   * @param pm
-   * Package manager to use
-   * @param info
-   * Info to use
-   * @return
-   * New instance mapped from given info or null if given info is invalid
+   *
+   * @param pm   Package manager to use
+   * @param info Info to use
+   * @return New instance mapped from given info or null if given info is invalid
    */
   public static ApplicationEntry from(final PackageManager pm, final PackageItemInfo info) {
     if (info == null) {
@@ -157,7 +164,7 @@ public class ApplicationEntry {
         appEntry.setLastUpdateTime(packageInfo.lastUpdateTime);
       }
     } catch (PackageManager.NameNotFoundException e) {
-      Log.e("wn:appentry", "Unable to get package info", e);
+      L.e("wn:appentry", "Unable to get package info", e);
     }
     return appEntry;
   }

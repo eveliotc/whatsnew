@@ -1,10 +1,11 @@
 package info.evelio.whatsnew;
 
 import android.app.Application;
-import info.evelio.whatsnew.helper.DatabaseHelper;
+import info.evelio.whatsnew.helper.PersistenceHelper;
 
 /**
  * Application class.
+ *
  * @author Evelio Tarazona Cáceres <evelio@evelio.info>
  */
 public class App extends Application {
@@ -12,6 +13,6 @@ public class App extends Application {
   public void onCreate() {
     super.onCreate();
 
-    DatabaseHelper.onCreate(this);
+    PersistenceHelper.onCreate(this);
   }
 }

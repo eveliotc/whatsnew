@@ -9,7 +9,6 @@ import com.codeslap.persistence.Column;
 import com.codeslap.persistence.Ignore;
 import com.codeslap.persistence.PrimaryKey;
 import com.codeslap.persistence.Table;
-import info.evelio.whatsnew.util.AppUtils;
 import info.evelio.whatsnew.util.L;
 import info.evelio.whatsnew.util.StringUtils;
 
@@ -224,14 +223,8 @@ public class ApplicationEntry {
           PackageManager.GET_SIGNATURES);
       appEntry.setPackageVersion(packageInfo.versionName);
       appEntry.setPackageVersionCode(packageInfo.versionCode);
-      if (AppUtils.isNinePlus()) {
-        appEntry.setFirstInstallTime(packageInfo.firstInstallTime);
-        appEntry.setLastUpdateTime(packageInfo.lastUpdateTime);
-      } else {
-        final long now = System.currentTimeMillis();
-        appEntry.setFirstInstallTime(now);
-        appEntry.setLastUpdateTime(now);
-      }
+      appEntry.setFirstInstallTime(packageInfo.firstInstallTime);
+      appEntry.setLastUpdateTime(packageInfo.lastUpdateTime);
     } catch (PackageManager.NameNotFoundException e) {
       L.e("wn:appentry", "Unable to get package info", e);
     }

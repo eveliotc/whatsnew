@@ -1,11 +1,13 @@
 package info.evelio.whatsnew.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.codeslap.groundy.DetachableResultReceiver;
 import com.codeslap.groundy.Groundy;
@@ -13,15 +15,24 @@ import info.evelio.whatsnew.R;
 import info.evelio.whatsnew.helper.AppListHelper;
 import info.evelio.whatsnew.helper.LoadingHelper;
 import info.evelio.whatsnew.helper.PrefsHelper;
+import info.evelio.whatsnew.model.ApplicationEntry;
 import info.evelio.whatsnew.task.CurrentAppsImporter;
+import info.evelio.whatsnew.util.L;
 
 /**
  * @author Evelio Tarazona Cáceres <evelio@evelio.info>
  */
 public class AppListFragment extends SherlockListFragment implements DetachableResultReceiver.Receiver {
+  private static final String TAG = "wn:AppList";
   private LoadingHelper mLoadingHelper = new LoadingHelper();
   private AppListHelper mAppListHelper;
   private DetachableResultReceiver mReceiver;
+  private boolean mIsMultiPane = false;
+
+  private final static AppItemCallback sNoOpCallback = new AppItemCallback() {
+    @Override public void onItemSelected(String packageName) {}
+  };
+  private AppItemCallback mItemCallback = sNoOpCallback;
 
   @Override
   public final View onCreateView(final LayoutInflater inflater,
@@ -37,6 +48,13 @@ public class AppListFragment extends SherlockListFragment implements DetachableR
 
     final Context themedContext = getActivity();
     final Context context = themedContext.getApplicationContext();
+
+    mIsMultiPane = getResources().getBoolean(R.bool.multi_pane);
+
+    getListView().setChoiceMode(mIsMultiPane
+        ? ListView.CHOICE_MODE_SINGLE
+        : ListView.CHOICE_MODE_NONE);
+
     mLoadingHelper.setTargetParent((ViewGroup) getView().findViewById(R.id.app_list_container));
     mAppListHelper = new AppListHelper(themedContext, getLoaderManager(), mLoadingHelper);
     mAppListHelper.startLoad();
@@ -53,6 +71,18 @@ public class AppListFragment extends SherlockListFragment implements DetachableR
   }
 
   @Override
+  public void onListItemClick(ListView l, View v, int position, long id) {
+    super.onListItemClick(l, v, position, id);
+
+    Object item = l.getAdapter().getItem(position);
+    if (item instanceof ApplicationEntry) {
+      mItemCallback.onItemSelected(((ApplicationEntry)item).getPackageName());
+    } else {
+      L.wtf(TAG, "Got non type item " + item + " at position " + position);
+    }
+  }
+
+  @Override
   public void onDestroyView() {
     mReceiver.clearReceiver();
     mLoadingHelper.onDestroyView();
@@ -64,4 +94,23 @@ public class AppListFragment extends SherlockListFragment implements DetachableR
     mAppListHelper.restartLoad();
   }
 
+  @Override
+  public void onAttach(Activity activity) {
+    super.onAttach(activity);
+
+    if (activity instanceof AppItemCallback) {
+      mItemCallback = (AppItemCallback) activity;
+    }
+  }
+
+  @Override
+  public void onDetach() {
+    super.onDetach();
+
+    mItemCallback = sNoOpCallback;
+  }
+
+  public interface AppItemCallback {
+    void onItemSelected(String packageName);
+  }
 }

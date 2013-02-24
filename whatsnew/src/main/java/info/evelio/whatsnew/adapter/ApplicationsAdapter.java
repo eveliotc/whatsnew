@@ -39,7 +39,7 @@ public class ApplicationsAdapter extends SingleTypeAdapter<ApplicationEntry> {
     // Some packages just won't Set package version :\
     final String displayPackageVersion = defaultIfEmpty(item.getPackageVersion(), item.getPackageVersionCode());
     CharSequence versionLabel;
-    if (item.getPackageVersionCode() > item.getPackageVersionCode()) { // We got upgraded
+    if ("info.evelio.whatsnew".equals(item.getPackageName()) || item.getPackageVersionCode() > item.getPackageVersionCode()) { // We got upgraded
       final int color = System.currentTimeMillis() - item.getLastUpdateTime() > NON_FRESH_TIME
           ? R.color.version_regular_text
           : R.color.version_upgraded_text;

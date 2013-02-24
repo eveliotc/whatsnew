@@ -10,6 +10,7 @@
     <item name="android:spinnerStyle">@style/Spinnerwn</item>
     <item name="android:dropDownSpinnerStyle">@style/Spinnerwn.DropDown</item>
     <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItemwn</item>
+    <item name="android:listViewStyle">@style/wn_ListView</item>
     <item name="android:progressBarStyleHorizontal">@style/ProgressBarwn</item>
 
     <item name="actionBarItemBackground">@drawable/selectable_background_wn</item>
@@ -143,6 +144,9 @@
         <item name="android:maxHeight">16dip</item>
     </style>
 
+  <style name="wn_ListView" parent="Widget.Sherlock.Light.ListView.DropDown">
+    <item name="android:listSelector">@drawable/selectable_background_wn</item>
+  </style>
 
 
 </resources>

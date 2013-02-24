@@ -5,4 +5,5 @@
 
   <string name="hexcolor_replace" translatable="false">HEXCOLOR</string>
   <string name="version_update_template" translatable="false"><![CDATA[<strike>%1$s</strike> &rarr; <font color="HEXCOLOR"><b>%2$s</b></font>]]></string>
+  <string name="about">About</string>
 </resources>

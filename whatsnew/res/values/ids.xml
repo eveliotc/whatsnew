@@ -3,4 +3,5 @@
   <item name="fragment_app_list" type="id"/>
   <item name="fragment_app_detail" type="id"/>
   <item name="loader_applications" type="id"/>
+  <item name="menu_item_about" type="id"/>
 </resources>

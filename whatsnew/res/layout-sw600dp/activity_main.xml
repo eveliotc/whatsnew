@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.actionbarsherlock.internal.widget.IcsLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
        android:layout_width="match_parent"
        android:layout_height="match_parent"
-       android:orientation="horizontal">
+       android:orientation="horizontal"
+       android:weightSum="4"
+       android:showDividers="middle"
+       android:divider="@drawable/abs__list_divider_holo_light"
+    >
   <fragment
       android:id="@id/fragment_app_list"
       android:name="info.evelio.whatsnew.fragment.AppListFragment"
-      android:layout_width="@dimen/width_multipane_small"
+      android:layout_weight="1"
+      android:layout_width="0dp"
       android:layout_height="match_parent"/>
   <fragment
         android:id="@id/fragment_app_detail"
         android:name="info.evelio.whatsnew.fragment.DetailFragment"
-        android:layout_width="match_parent"
+        android:layout_weight="3"
+        android:layout_width="0dp"
         android:layout_height="match_parent"/>
-</LinearLayout>
+  </com.actionbarsherlock.internal.widget.IcsLinearLayout>

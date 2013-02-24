@@ -28,6 +28,10 @@ public class ApplicationEntry {
   private String packageVersion;
   @Column(Contract.COLUMN_PACKAGE_VERSION_CODE)
   private long packageVersionCode;
+  @Column(Contract.COLUMN_PREVIOUS_PACKAGE_VERSION)
+  private String previousPackageVersion;
+  @Column(value = Contract.COLUMN_PREVIOUS_PACKAGE_VERSION_CODE, defaultValue = "-1")
+  private long previousPackageVersionCode;
   @Column(Contract.COLUMN_FIRST_INSTALL_TIME)
   private long firstInstallTime;
   @Column(Contract.COLUMN_LAST_UPDATE_TIME)
@@ -77,6 +81,22 @@ public class ApplicationEntry {
     this.packageVersionCode = packageVersionCode;
   }
 
+  public String getPreviousPackageVersion() {
+    return previousPackageVersion;
+  }
+
+  public void setPreviousPackageVersion(String previousPackageVersion) {
+    this.previousPackageVersion = previousPackageVersion;
+  }
+
+  public long getPreviousPackageVersionCode() {
+    return previousPackageVersionCode;
+  }
+
+  public void setPreviousPackageVersionCode(long previousPackageVersionCode) {
+    this.previousPackageVersionCode = previousPackageVersionCode;
+  }
+
   public long getFirstInstallTime() {
     return firstInstallTime;
   }
@@ -110,14 +130,33 @@ public class ApplicationEntry {
   }
 
   @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof ApplicationEntry)) return false;
+
+    ApplicationEntry entry = (ApplicationEntry) o;
+
+    if (packageName != null ? !packageName.equals(entry.packageName) : entry.packageName != null) return false;
+
+    return true;
+  }
+
+  @Override
+  public int hashCode() {
+    return packageName != null ? packageName.hashCode() : 0;
+  }
+
+  @Override
   public String toString() {
     return "ApplicationEntry{" +
         "packageName='" + packageName + '\'' +
         ", packageVersion='" + packageVersion + '\'' +
         ", packageVersionCode=" + packageVersionCode +
+        ", previousPackageVersion='" + previousPackageVersion + '\'' +
+        ", previousPackageVersionCode=" + previousPackageVersionCode +
         ", firstInstallTime=" + firstInstallTime +
         ", lastUpdateTime=" + lastUpdateTime +
-        ", label='" + label + '\'' +
+        ", label=" + label +
         ", icon=" + icon +
         '}';
   }
@@ -132,7 +171,9 @@ public class ApplicationEntry {
      */
     String COLUMN_PACKAGE_NAME = "package_name";
     String COLUMN_PACKAGE_VERSION = "package_version";
+    String COLUMN_PREVIOUS_PACKAGE_VERSION = "previous_package_version";
     String COLUMN_PACKAGE_VERSION_CODE = "package_version_code";
+    String COLUMN_PREVIOUS_PACKAGE_VERSION_CODE = "previous_package_version_code";
     String COLUMN_FIRST_INSTALL_TIME = "first_install_time";
     String COLUMN_LAST_UPDATE_TIME = "last_update_time";
   }
@@ -186,6 +227,10 @@ public class ApplicationEntry {
       if (AppUtils.isNinePlus()) {
         appEntry.setFirstInstallTime(packageInfo.firstInstallTime);
         appEntry.setLastUpdateTime(packageInfo.lastUpdateTime);
+      } else {
+        final long now = System.currentTimeMillis();
+        appEntry.setFirstInstallTime(now);
+        appEntry.setLastUpdateTime(now);
       }
     } catch (PackageManager.NameNotFoundException e) {
       L.e("wn:appentry", "Unable to get package info", e);

@@ -2,4 +2,7 @@
 <resources>
   <string name="app_name">What\'s NEW?</string>
   <string name="message_empty_list">No app has been updated, yet.</string>
+
+  <string name="hexcolor_replace" translatable="false">HEXCOLOR</string>
+  <string name="version_update_template" translatable="false"><![CDATA[<strike>%1$s</strike> &rarr; <font color="HEXCOLOR"><b>%2$s</b></font>]]></string>
 </resources>

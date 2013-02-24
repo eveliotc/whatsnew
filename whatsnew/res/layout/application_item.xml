@@ -24,4 +24,16 @@
       android:ellipsize="end"
       android:maxLines="1"
       />
+
+  <TextView
+      android:id="@+id/app_version_label"
+      android:layout_below="@+id/app_item_label"
+      android:layout_toRightOf="@id/app_item_icon"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:textAppearance="@android:style/TextAppearance.Small"
+      android:ellipsize="end"
+      android:maxLines="1"
+      android:text=""
+      />
 </RelativeLayout>

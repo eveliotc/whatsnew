@@ -21,6 +21,7 @@ public class AppListHelper {
   private ApplicationsAdapter mAdapter;
   private LoaderManager.LoaderCallbacks<List<ApplicationEntry>> mLoadCallbacks = new AppListCallbacks();
   private LoadingHelper mLoadingHelper;
+  private OnLoadCallback mLoadCallback;
 
   public AppListHelper(Context context, LoaderManager loaderManager, LoadingHelper loadingHelper) {
     mContext = context;
@@ -43,6 +44,10 @@ public class AppListHelper {
     mLoaderManager.restartLoader(R.id.loader_applications, null, mLoadCallbacks);
   }
 
+  public void setLoadCallback(OnLoadCallback loadCallback) {
+    mLoadCallback = loadCallback;
+  }
+
   private class AppListCallbacks implements LoaderManager.LoaderCallbacks<List<ApplicationEntry>> {
     @Override
     public Loader<List<ApplicationEntry>> onCreateLoader(int id, Bundle args) {
@@ -54,11 +59,18 @@ public class AppListHelper {
     public void onLoadFinished(Loader<List<ApplicationEntry>> loader, List<ApplicationEntry> data) {
       mAdapter.setItems(data);
       mLoadingHelper.hide();
+      if (mLoadCallback != null) {
+        mLoadCallback.onLoadFinished();
+      }
     }
 
     @Override
     public void onLoaderReset(Loader<List<ApplicationEntry>> loader) {
       // We are good but thanks
     }
+  }
+
+  public interface OnLoadCallback {
+    public void onLoadFinished();
   }
 }

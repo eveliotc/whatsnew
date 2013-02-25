@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import com.actionbarsherlock.app.SherlockListFragment;
 import com.codeslap.groundy.DetachableResultReceiver;
@@ -22,7 +23,7 @@ import info.evelio.whatsnew.util.L;
 /**
  * @author Evelio Tarazona Cáceres <evelio@evelio.info>
  */
-public class AppListFragment extends SherlockListFragment implements DetachableResultReceiver.Receiver {
+public class AppListFragment extends SherlockListFragment implements DetachableResultReceiver.Receiver, AppListHelper.OnLoadCallback {
   private static final String TAG = "wn:AppList";
   private LoadingHelper mLoadingHelper = new LoadingHelper();
   private AppListHelper mAppListHelper;
@@ -57,6 +58,7 @@ public class AppListFragment extends SherlockListFragment implements DetachableR
 
     mLoadingHelper.setTargetParent((ViewGroup) getView().findViewById(R.id.app_list_container));
     mAppListHelper = new AppListHelper(themedContext, getLoaderManager(), mLoadingHelper);
+    mAppListHelper.setLoadCallback(this);
     mAppListHelper.startLoad();
     setListAdapter(mAppListHelper.getAdapter());
 
@@ -72,8 +74,6 @@ public class AppListFragment extends SherlockListFragment implements DetachableR
 
   @Override
   public void onListItemClick(ListView l, View v, int position, long id) {
-    super.onListItemClick(l, v, position, id);
-
     Object item = l.getAdapter().getItem(position);
     if (item instanceof ApplicationEntry) {
       mItemCallback.onItemSelected(((ApplicationEntry)item).getPackageName());
@@ -84,6 +84,7 @@ public class AppListFragment extends SherlockListFragment implements DetachableR
 
   @Override
   public void onDestroyView() {
+    mAppListHelper.setLoadCallback(null);
     mReceiver.clearReceiver();
     mLoadingHelper.onDestroyView();
     super.onDestroyView();
@@ -108,6 +109,21 @@ public class AppListFragment extends SherlockListFragment implements DetachableR
     super.onDetach();
 
     mItemCallback = sNoOpCallback;
+  }
+
+  @Override
+  public void onLoadFinished() {
+    if (!mIsMultiPane) {
+      return;
+    }
+    // We have to select first item
+    // TODO research if there is a better way of doing this
+    final ListView listView = getListView();
+    ListAdapter adapter;
+    if (listView != null && (adapter = listView.getAdapter()) != null && adapter.getCount() > 0) {
+      listView.setItemChecked(0, true);
+      onListItemClick(listView, null, 0, adapter.getItemId(0));
+    }
   }
 
   public interface AppItemCallback {

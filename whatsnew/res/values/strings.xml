@@ -6,4 +6,12 @@
   <string name="hexcolor_replace" translatable="false">HEXCOLOR</string>
   <string name="version_update_template" translatable="false"><![CDATA[<strike>%1$s</strike> &rarr; <font color="HEXCOLOR"><b>%2$s</b></font>]]></string>
   <string name="about">About</string>
+  <string name="details">Details</string>
+  <string name="launch">Launch</string>
+  <string name="store">Store</string>
+  <string name="uninstall">Uninstall</string>
+  <string name="info">Info</string>
+  <string name="error_unable_to_launch">Unable to launch this app, wait… Is it an app?</string>
+  <string name="error_unable_to_launch_uninstall">Unable to launch uninstall activity</string>
+  <string name="error_unable_to_launch_store">Unable to launch Application Store</string>
 </resources>

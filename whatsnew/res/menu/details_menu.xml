@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+  <item
+      android:showAsAction="always|withText"
+      android:id="@id/menu_item_launch"
+      android:icon="@drawable/ic_action_launch"
+      android:visible="false"
+      android:title="@string/launch"
+      />
+  <item
+      android:showAsAction="always|withText"
+      android:id="@id/menu_item_uninstall"
+      android:icon="@drawable/ic_action_trash"
+      android:visible="false"
+      android:title="@string/uninstall"
+      />
+  <item
+      android:showAsAction="always"
+      android:id="@id/menu_item_store"
+      android:icon="@drawable/ic_action_store"
+      android:visible="false"
+      android:title="@string/store"
+      />
+  <item
+      android:showAsAction="always"
+      android:id="@id/menu_item_info"
+      android:icon="@drawable/ic_action_info"
+      android:visible="false"
+      android:title="@string/info"
+      />
+</menu>

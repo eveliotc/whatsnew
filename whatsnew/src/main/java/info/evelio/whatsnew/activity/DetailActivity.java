@@ -14,9 +14,17 @@ public class DetailActivity extends BaseActivity {
   @Override
   protected final void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    setupActionBar();
+
     setContentView(R.layout.activity_detail);
 
     DetailFragment.display(getSupportFragmentManager(), getIntent().getStringExtra(EXTRA_PACKAGE_NAME));
+  }
+
+  private void setupActionBar() {
+    setTitle(R.string.details);
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
   }
 
   public static void start(Activity activity, String packageName) {

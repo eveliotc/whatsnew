@@ -1,7 +1,6 @@
 package info.evelio.whatsnew.loader;
 
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import com.codeslap.groundy.loader.SupportListLoader;
@@ -11,7 +10,6 @@ import info.evelio.whatsnew.helper.PersistenceHelper;
 import info.evelio.whatsnew.model.ApplicationEntry;
 import info.evelio.whatsnew.util.L;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,13 +54,7 @@ public class AppsLoader extends SupportListLoader<ApplicationEntry> {
     final PackageManager pm = mPackageManager;
     try {
       final PackageInfo packageInfo = pm.getPackageInfo(entry.getPackageName(), 0);
-      final ApplicationInfo appInfo = packageInfo.applicationInfo;
-      File sourceDir = new File(appInfo.sourceDir);
-      if (sourceDir.exists()) { // its mounted
-        // TODO EEE we might want to cache this as it rarely changes
-        entry.setLabel(appInfo.loadLabel(pm));
-        entry.setIcon(appInfo.loadIcon(pm));
-      }
+      entry.loadResources(pm, packageInfo.applicationInfo);
       return true;
     } catch (Exception e) {
       L.e(TAG, "Invalid package found", e);

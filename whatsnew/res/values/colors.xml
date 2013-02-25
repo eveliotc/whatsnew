@@ -4,4 +4,5 @@
   <color name="default_drawable">#ff000000</color>
   <color name="version_regular_text">#ff000000</color>
   <color name="version_upgraded_text">#ff99cc00</color>
+  <color name="text_separator">#ff99cc00</color>
 </resources>

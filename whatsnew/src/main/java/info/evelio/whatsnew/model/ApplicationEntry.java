@@ -1,16 +1,17 @@
 package info.evelio.whatsnew.model;
 
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageItemInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
+import android.content.pm.*;
 import android.graphics.drawable.Drawable;
 import com.codeslap.persistence.Column;
 import com.codeslap.persistence.Ignore;
 import com.codeslap.persistence.PrimaryKey;
 import com.codeslap.persistence.Table;
 import info.evelio.whatsnew.util.L;
-import info.evelio.whatsnew.util.StringUtils;
+
+import java.io.File;
+
+import static info.evelio.whatsnew.util.StringUtils.defaultIfEmpty;
+import static info.evelio.whatsnew.util.StringUtils.isNotEmpty;
 
 /**
  * @author Evelio Tarazona Cáceres <evelio@evelio.info>
@@ -128,6 +129,34 @@ public class ApplicationEntry {
     this.icon = icon;
   }
 
+  public boolean hasValidPackageName() {
+    return isNotEmpty(packageName);
+  }
+
+  public CharSequence getDisplayableLabel() {
+    if (label != null) {
+      return label;
+    }
+    return defaultIfEmpty(packageName, "");
+  }
+
+  public CharSequence getDisplayableVersion() {
+    return defaultIfEmpty(packageVersion, packageVersionCode);
+  }
+
+  public CharSequence getDisplayablePreviousVersion() {
+    return defaultIfEmpty(previousPackageVersion, previousPackageVersionCode);
+  }
+
+  public void loadResources(final PackageManager pm, final ApplicationInfo appInfo) throws Exception {
+    File sourceDir = new File(appInfo.sourceDir);
+    if (sourceDir.exists()) { // its mounted
+      // TODO EEE we might want to cache this in db or dir as it rarely changes
+      setLabel(appInfo.loadLabel(pm));
+      setIcon(appInfo.loadIcon(pm));
+    }
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
@@ -177,58 +206,73 @@ public class ApplicationEntry {
     String COLUMN_LAST_UPDATE_TIME = "last_update_time";
   }
 
-  /**
-   * Create a new instance mapping given info
-   *
-   * @param pm           Package manager to use
-   * @param resolvedInfo Info to use
-   * @return New instance mapped from given info or null if given info is invalid
-   */
-  public static ApplicationEntry from(final PackageManager pm, final ResolveInfo resolvedInfo) {
-    if (resolvedInfo == null) {
-      return null;
+  public static final class Builder {
+    private PackageManager mPm;
+    private String mPackageName;
+    private boolean mTryLoadResources;
+
+    public Builder(PackageManager pm) {
+      mPm = pm;
+      reset();
     }
-    // We try first activities and broadcasts
-    ApplicationEntry appEntry = from(pm, resolvedInfo.activityInfo);
-    if (appEntry != null) {
+
+    public Builder reset() {
+      mPackageName = null;
+      mTryLoadResources = false;
+      return this;
+    }
+
+    public Builder forPackage(String packageName) {
+      mPackageName = packageName;
+      return this;
+    }
+
+    public Builder loadingResources() {
+      mTryLoadResources = true;
+      return this;
+    }
+
+    public Builder from(final PackageItemInfo info) {
+      return forPackage(info == null ? null : info.packageName);
+    }
+
+    public Builder from(final ResolveInfo resolvedInfo) {
+      if (resolvedInfo == null) {
+        forPackage(null);
+        return this;
+      }
+      from(resolvedInfo.activityInfo);
+      if (isNotEmpty(mPackageName)) {
+        return this;
+      }
+      // We try a service in such case
+      return from(resolvedInfo.serviceInfo);
+    }
+
+    public ApplicationEntry build() {
+      ApplicationEntry appEntry = new ApplicationEntry();
+      appEntry.setPackageName(mPackageName);
+
+      try {
+        PackageInfo packageInfo = mPm.getPackageInfo(mPackageName,
+            PackageManager.GET_DISABLED_COMPONENTS
+                | PackageManager.GET_UNINSTALLED_PACKAGES
+                | PackageManager.GET_SIGNATURES);
+
+        appEntry.setPackageVersion(packageInfo.versionName);
+        appEntry.setPackageVersionCode(packageInfo.versionCode);
+        appEntry.setFirstInstallTime(packageInfo.firstInstallTime);
+        appEntry.setLastUpdateTime(packageInfo.lastUpdateTime);
+
+        if (mTryLoadResources) {
+          appEntry.loadResources(mPm, packageInfo.applicationInfo);
+        }
+      } catch (Exception e) {
+        L.e("wn:appentry", "Unable to get some package info", e);
+      }
+
       return appEntry;
     }
-    // We try a service in such case
-    return from(pm, resolvedInfo.serviceInfo);
-  }
-
-  /**
-   * Create a new instance mapping given info
-   *
-   * @param pm   Package manager to use
-   * @param info Info to use
-   * @return New instance mapped from given info or null if given info is invalid
-   */
-  public static ApplicationEntry from(final PackageManager pm, final PackageItemInfo info) {
-    if (info == null) {
-      return null;
-    }
-    return from(pm, info.packageName);
-  }
-
-  public static ApplicationEntry from(final PackageManager pm, final String packageName) {
-    if (StringUtils.isEmpty(packageName)) {
-      return null;
-    }
-    ApplicationEntry appEntry = new ApplicationEntry();
-    appEntry.setPackageName(packageName);
-    try {
-      PackageInfo packageInfo = pm.getPackageInfo(packageName, PackageManager.GET_DISABLED_COMPONENTS |
-          PackageManager.GET_UNINSTALLED_PACKAGES |
-          PackageManager.GET_SIGNATURES);
-      appEntry.setPackageVersion(packageInfo.versionName);
-      appEntry.setPackageVersionCode(packageInfo.versionCode);
-      appEntry.setFirstInstallTime(packageInfo.firstInstallTime);
-      appEntry.setLastUpdateTime(packageInfo.lastUpdateTime);
-    } catch (PackageManager.NameNotFoundException e) {
-      L.e("wn:appentry", "Unable to get package info", e);
-    }
-    return appEntry;
   }
 
 }

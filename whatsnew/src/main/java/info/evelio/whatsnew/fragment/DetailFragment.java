@@ -13,8 +13,10 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.kevinsawicki.wishlist.Toaster;
 import info.evelio.whatsnew.R;
+import info.evelio.whatsnew.model.ApplicationEntry;
 import info.evelio.whatsnew.util.AppUtils;
 import info.evelio.whatsnew.util.ExtendedViewUpdater;
+import info.evelio.whatsnew.util.L;
 
 import static info.evelio.whatsnew.util.AppUtils.*;
 import static info.evelio.whatsnew.util.StringUtils.isEmpty;
@@ -23,6 +25,8 @@ import static info.evelio.whatsnew.util.StringUtils.isEmpty;
  * @author Evelio Tarazona Cáceres <evelio@evelio.info>
  */
 public class DetailFragment extends SherlockFragment {
+  private static final String TAG = "wn:Detail";
+
   private static final int OTHER_ACTION_FLAGS = MenuItem.SHOW_AS_ACTION_ALWAYS;
   private static final int MY_ACTION_FLAGS = MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT;
 
@@ -143,8 +147,10 @@ public class DetailFragment extends SherlockFragment {
 
   private static class ViewController implements View.OnClickListener {
     private static final int[] sChilds = {
-        R.id.app_detail_label,
+        R.id.app_detail_absolute_root,
+        R.id.app_detail_root,
         R.id.app_detail_icon,
+        R.id.app_detail_label,
         R.id.app_detail_version_label,
     };
     private DetailFragment mDetailFragment;
@@ -159,7 +165,6 @@ public class DetailFragment extends SherlockFragment {
       if (hasFragment()) {
         mUpdater = new ExtendedViewUpdater();
         mUpdater.initialize(mDetailFragment.getView(), sChilds);
-        mUpdater.clickListener(this);
       } else {
         mUpdater = null;
       }
@@ -173,16 +178,41 @@ public class DetailFragment extends SherlockFragment {
       if (!hasFragment()) {
         return;
       }
+      mCurrentPackage = packageName;
       if (isEmpty(packageName)) {
         displayEmpty();
+      } else {
+        updateAll();
       }
-      mCurrentPackage = packageName;
+    }
+
+    private void updateAll() {
+      if (!hasFragment()) {
+        return;
+      }
+      final ApplicationEntry.Builder builder = new ApplicationEntry.Builder(mDetailFragment.getActivity().getPackageManager());
+
+      try {
+        final ApplicationEntry entry = builder.forPackage(mCurrentPackage).loadingResources().build();
+        mUpdater.imageView(2).setImageDrawable(entry.getIcon());
+        mUpdater.setText(3, entry.getDisplayableLabel());
+        mUpdater.setText(4, entry.getDisplayableVersion());
+      } catch (Exception e) {
+        L.e(TAG, "Unable to display item with package " + mCurrentPackage, e);
+        displayEmpty();
+        return;
+      }
+
+      mUpdater.setBackground(0, null);
+      mUpdater.setGone(1, false);
     }
 
     private void displayEmpty() {
       if (!hasFragment()) {
         return;
       }
+      mUpdater.setBackground(0, R.drawable.empty_placeholder);
+      mUpdater.setGone(1, true);
     }
 
     public String getCurrentPackage() {

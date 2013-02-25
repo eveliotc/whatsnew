@@ -2,6 +2,8 @@
 <resources>
   <dimen name="icon_size">48dip</dimen>
   <dimen name="application_item_white_space">10dip</dimen>
+  <dimen name="application_detail_size">166dip</dimen>
+  <dimen name="icon_detail_size">96dip</dimen>
   <dimen name="application_detail_white_space">10dip</dimen>
-  <dimen name="icon_detail_size">48dip</dimen>
+  <dimen name="application_detail_white_space_half">5dip</dimen>
 </resources>

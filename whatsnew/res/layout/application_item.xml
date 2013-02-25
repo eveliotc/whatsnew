@@ -35,6 +35,5 @@
       android:textAppearance="@android:style/TextAppearance.Small"
       android:ellipsize="end"
       android:maxLines="1"
-      android:text=""
       />
 </RelativeLayout>

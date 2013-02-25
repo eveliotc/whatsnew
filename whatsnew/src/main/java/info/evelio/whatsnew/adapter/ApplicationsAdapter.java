@@ -7,7 +7,6 @@ import info.evelio.whatsnew.R;
 import info.evelio.whatsnew.model.ApplicationEntry;
 
 import static android.text.Html.fromHtml;
-import static info.evelio.whatsnew.util.StringUtils.defaultIfEmpty;
 import static info.evelio.whatsnew.util.StringUtils.hexColor;
 
 /**
@@ -34,16 +33,15 @@ public class ApplicationsAdapter extends SingleTypeAdapter<ApplicationEntry> {
   protected void update(int position, ApplicationEntry item) {
     final Drawable icon = item.getIcon();
     imageView(0).setImageDrawable(icon != null ? item.getIcon() : mDefaultDrawable);
-    final CharSequence label = item.getLabel();
-    setText(1, label != null ? label : item.getPackageName());
+    setText(1, item.getDisplayableLabel());
     // Some packages just won't Set package version :\
-    final String displayPackageVersion = defaultIfEmpty(item.getPackageVersion(), item.getPackageVersionCode());
+    final CharSequence displayPackageVersion = item.getDisplayableVersion();
     CharSequence versionLabel;
-    if ("info.evelio.whatsnew".equals(item.getPackageName()) || item.getPackageVersionCode() > item.getPackageVersionCode()) { // We got upgraded
+    if (item.getPackageVersionCode() > item.getPackageVersionCode()) { // We got upgraded
       final int color = System.currentTimeMillis() - item.getLastUpdateTime() > NON_FRESH_TIME
           ? R.color.version_regular_text
           : R.color.version_upgraded_text;
-      final String displayPreviousPackageVersion = defaultIfEmpty(item.getPreviousPackageVersion(), item.getPreviousPackageVersionCode());
+      final CharSequence displayPreviousPackageVersion = item.getDisplayablePreviousVersion();
       final String computedVersionLabel = hexColor(mContext, R.string.version_update_template,
           color, displayPreviousPackageVersion, displayPackageVersion);
       versionLabel = fromHtml(computedVersionLabel);

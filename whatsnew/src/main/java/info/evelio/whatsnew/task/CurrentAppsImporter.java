@@ -1,7 +1,6 @@
 package info.evelio.whatsnew.task;
 
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import com.codeslap.groundy.GroundyTask;
 import info.evelio.whatsnew.helper.PersistenceHelper;
@@ -36,10 +35,10 @@ public class CurrentAppsImporter extends GroundyTask {
     }
 
     final List<ApplicationEntry> entries = new LinkedList<ApplicationEntry>();
-    final PackageManager pm = context.getPackageManager();
+    final ApplicationEntry.Builder builder = new ApplicationEntry.Builder(context.getPackageManager());
     for (ResolveInfo info : resolved) {
-      ApplicationEntry entry = ApplicationEntry.from(pm, info);
-      if (entry != null) {
+      ApplicationEntry entry = builder.reset().from(info).build();
+      if (entry.hasValidPackageName()) {
         entries.add(entry);
       }
     }

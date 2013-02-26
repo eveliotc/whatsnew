@@ -56,7 +56,6 @@
             android:layout_height="wrap_content"
             android:textAppearance="@android:style/TextAppearance.Medium.Inverse"
             android:textColor="?android:attr/textColorSecondaryInverse"
-            android:ellipsize="end"
             android:maxLines="1"
             />
 
@@ -85,6 +84,7 @@
           android:padding="@dimen/application_detail_white_space"
           android:autoLink="all"
           android:linksClickable="true"
+          android:textAppearance="@android:style/TextAppearance.Medium"
           />
     </LinearLayout>
   </ScrollView>

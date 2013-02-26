@@ -11,13 +11,16 @@ import info.evelio.whatsnew.util.L;
 import java.io.File;
 
 import static info.evelio.whatsnew.util.StringUtils.defaultIfEmpty;
+import static info.evelio.whatsnew.util.StringUtils.emptyIfNull;
 import static info.evelio.whatsnew.util.StringUtils.isNotEmpty;
 
 /**
+ * Full entry for certain ap even if it was removed
  * @author Evelio Tarazona Cáceres <evelio@evelio.info>
  */
 @Table(value = ApplicationEntry.Contract.TABLE_NAME)
 public class ApplicationEntry {
+  private static final String TAG = "wn:appentry";
   /**
    * Package name
    */
@@ -36,6 +39,12 @@ public class ApplicationEntry {
   private long firstInstallTime;
   @Column(Contract.COLUMN_LAST_UPDATE_TIME)
   private long lastUpdateTime;
+  @Column(value = Contract.COLUMN_REMOVED, defaultValue = "0")
+  private boolean removed;
+
+  @Column(value = Contract.COLUMN_CHANGE_LOG, defaultValue = "")
+  private String changeLog;
+
   @Ignore
   private CharSequence label;
   @Ignore
@@ -129,6 +138,22 @@ public class ApplicationEntry {
     this.icon = icon;
   }
 
+  public boolean isRemoved() {
+    return removed;
+  }
+
+  public void setRemoved(boolean removed) {
+    this.removed = removed;
+  }
+
+  public String getChangeLog() {
+    return changeLog;
+  }
+
+  public void setChangeLog(String changeLog) {
+    this.changeLog = changeLog;
+  }
+
   public boolean hasValidPackageName() {
     return isNotEmpty(packageName);
   }
@@ -137,7 +162,7 @@ public class ApplicationEntry {
     if (label != null) {
       return label;
     }
-    return defaultIfEmpty(packageName, "");
+    return emptyIfNull(packageName);
   }
 
   public CharSequence getDisplayableVersion() {
@@ -184,8 +209,9 @@ public class ApplicationEntry {
         ", previousPackageVersionCode=" + previousPackageVersionCode +
         ", firstInstallTime=" + firstInstallTime +
         ", lastUpdateTime=" + lastUpdateTime +
+        ", removed=" + removed +
+        ", changeLog='" + changeLog + '\'' +
         ", label=" + label +
-        ", icon=" + icon +
         '}';
   }
 
@@ -204,12 +230,16 @@ public class ApplicationEntry {
     String COLUMN_PREVIOUS_PACKAGE_VERSION_CODE = "previous_package_version_code";
     String COLUMN_FIRST_INSTALL_TIME = "first_install_time";
     String COLUMN_LAST_UPDATE_TIME = "last_update_time";
+    String COLUMN_REMOVED = "removed";
+    String COLUMN_CHANGE_LOG = "change_log";
+
   }
 
   public static final class Builder {
     private PackageManager mPm;
     private String mPackageName;
     private boolean mTryLoadResources;
+    private ApplicationEntry mPrevious;
 
     public Builder(PackageManager pm) {
       mPm = pm;
@@ -219,6 +249,7 @@ public class ApplicationEntry {
     public Builder reset() {
       mPackageName = null;
       mTryLoadResources = false;
+      mPrevious = null;
       return this;
     }
 
@@ -249,6 +280,11 @@ public class ApplicationEntry {
       return from(resolvedInfo.serviceInfo);
     }
 
+    public Builder with(final ApplicationEntry previous) {
+      mPrevious = previous;
+      return this;
+    }
+
     public ApplicationEntry build() {
       ApplicationEntry appEntry = new ApplicationEntry();
       appEntry.setPackageName(mPackageName);
@@ -264,15 +300,21 @@ public class ApplicationEntry {
         appEntry.setFirstInstallTime(packageInfo.firstInstallTime);
         appEntry.setLastUpdateTime(packageInfo.lastUpdateTime);
 
+        if (mPrevious != null) {
+          appEntry.setPreviousPackageVersion( mPrevious.getPackageVersion() );
+          appEntry.setPreviousPackageVersionCode( mPrevious.getPreviousPackageVersionCode() );
+        }
+
         if (mTryLoadResources) {
           appEntry.loadResources(mPm, packageInfo.applicationInfo);
         }
       } catch (Exception e) {
-        L.e("wn:appentry", "Unable to get some package info", e);
+        L.e(TAG, "Unable to get some package info", e);
       }
 
       return appEntry;
     }
+
   }
 
 }

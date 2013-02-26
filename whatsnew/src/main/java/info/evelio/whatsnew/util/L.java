@@ -21,4 +21,8 @@ public class L {
   public static void wtf(String tag, String msg) {
     Log.wtf(tag, msg);
   }
+
+  public static void w(String tag, String msg) {
+    Log.w(tag, msg);
+  }
 }

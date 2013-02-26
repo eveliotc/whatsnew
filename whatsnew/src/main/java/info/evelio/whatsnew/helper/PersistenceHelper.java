@@ -7,7 +7,7 @@ import com.codeslap.persistence.Persistence;
 import com.codeslap.persistence.PersistenceConfig;
 import com.codeslap.persistence.SqlAdapter;
 import info.evelio.whatsnew.model.ApplicationEntry;
-import info.evelio.whatsnew.model.ApplicationVersion;
+import info.evelio.whatsnew.model.EntrySnapshot;
 
 /**
  * @author Evelio Tarazona Cáceres <evelio@evelio.info>
@@ -24,7 +24,7 @@ public class PersistenceHelper {
    */
   public static void onCreate(final Application application) {
     DatabaseSpec database = PersistenceConfig.registerSpec(DATABASE_SPEC, DATABASE_VERSION);
-    database.match(ApplicationVersion.class);
+    database.match(EntrySnapshot.class);
     database.matchNotAutoIncrement(ApplicationEntry.class);
   }
 

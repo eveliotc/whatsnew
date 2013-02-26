@@ -16,6 +16,10 @@ public class StringUtils {
     return !isEmpty(value);
   }
 
+  public static String emptyIfNull(final String value) {
+    return value == null ? "" : value;
+  }
+
   /**
    * Replace all references of {@link R.string#hexcolor_replace} to given color
    * @param context

@@ -78,10 +78,13 @@
 
 
       <TextView
+          android:id="@+id/app_detail_change_log_text"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:text="Hey check me out!"
+          android:text="@string/empty_change_log"
           android:padding="@dimen/application_detail_white_space"
+          android:autoLink="all"
+          android:linksClickable="true"
           />
     </LinearLayout>
   </ScrollView>

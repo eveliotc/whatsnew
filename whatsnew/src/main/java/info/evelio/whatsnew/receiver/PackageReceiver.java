@@ -14,7 +14,8 @@ import info.evelio.whatsnew.util.L;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
+
+import static info.evelio.whatsnew.util.StringUtils.bundle;
 
 /**
  * @author Evelio Tarazona Cáceres <evelio@evelio.info>
@@ -100,15 +101,11 @@ public class PackageReceiver extends BroadcastReceiver {
   private static void log(Intent intent) {
     StringBuilder builder = new StringBuilder("Received ")
         .append(intent);
-    Set<String> keys;
-    if (intent == null || intent.getExtras() == null || (keys = intent.getExtras().keySet()).isEmpty()) {
+    if (intent == null) {
       L.d(TAG, builder.toString());
       return;
     }
-    Bundle extras = intent.getExtras();
-    for (String key : keys) {
-      builder.append(" ").append(key).append(": ").append(String.valueOf(extras.get(key)));
-    }
+    builder.append(bundle(intent.getExtras()));
     L.d(TAG, builder.toString());
   }
 }

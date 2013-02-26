@@ -86,6 +86,7 @@ public class AppListFragment extends SherlockListFragment implements DetachableR
   public void onDestroyView() {
     mAppListHelper.setLoadCallback(null);
     mReceiver.clearReceiver();
+    mReceiver = null;
     mLoadingHelper.onDestroyView();
     super.onDestroyView();
   }

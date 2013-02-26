@@ -25,7 +25,7 @@ public class ApplicationEntry {
    * Package name
    */
   @PrimaryKey(autoincrement = false)
-  @Column(Contract.COLUMN_PACKAGE_NAME)
+  @Column(value = Contract.COLUMN_PACKAGE_NAME, forceName = true)
   private String packageName;
   @Column(Contract.COLUMN_PACKAGE_VERSION)
   private String packageVersion;

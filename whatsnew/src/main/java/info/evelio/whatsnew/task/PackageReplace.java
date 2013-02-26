@@ -2,7 +2,6 @@ package info.evelio.whatsnew.task;
 
 import android.content.Context;
 import info.evelio.whatsnew.model.ApplicationEntry;
-import info.evelio.whatsnew.model.EntrySnapshot;
 import info.evelio.whatsnew.util.L;
 
 /**
@@ -21,9 +20,9 @@ public class PackageReplace extends PackageTask {
       return false;
     }
 
-    final EntrySnapshot snapshot = new EntrySnapshot.Builder().from(oldEntry).build();
-    getSqlAdapter().store(snapshot);
+    makeSnapshot(oldEntry);
 
     return getSqlAdapter().store(applicationEntry) != null;
   }
+
 }

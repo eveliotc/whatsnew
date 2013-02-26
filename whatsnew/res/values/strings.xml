@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">What\'s NEW?</string>
-  <string name="message_empty_list">No app has been updated, yet.</string>
-
   <string name="hexcolor_replace" translatable="false">HEXCOLOR</string>
   <string name="version_update_template" translatable="false"><![CDATA[<strike>%1$s</strike> &rarr; <font color="HEXCOLOR"><b>%2$s</b></font>]]></string>
+  <string name="crawling_lang_code" translatable="false">en</string>
+
+  <string name="app_name">What\'s NEW?</string>
+  <string name="whats_new">What\'s NEW?</string>
+  <string name="message_empty_list">No app has been updated, yet.</string>
   <string name="about">About</string>
   <string name="details">Details</string>
   <string name="launch">Launch</string>
@@ -14,5 +16,5 @@
   <string name="error_unable_to_launch">Unable to launch this app, wait… Is it an app?</string>
   <string name="error_unable_to_launch_uninstall">Unable to launch uninstall activity</string>
   <string name="error_unable_to_launch_store">Unable to launch Application Store</string>
-  <string name="whats_new">What\'s NEW?</string>
+  <string name="empty_change_log">No what\'s new found :(</string>
 </resources>

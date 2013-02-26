@@ -48,7 +48,7 @@ public class AppsLoader extends SupportListLoader<ApplicationEntry> {
   }
 
   private boolean goodEnough(ApplicationEntry entry) {
-    if (entry == null || isEmpty(entry.getPackageName())) {
+    if (entry == null || isEmpty(entry.getPackageName()) || entry.isRemoved()) {
       return false;
     }
     final PackageManager pm = mPackageManager;

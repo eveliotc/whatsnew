@@ -3,7 +3,9 @@ package info.evelio.whatsnew.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentManager;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,26 +13,31 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.codeslap.groundy.DetachableResultReceiver;
+import com.codeslap.groundy.Groundy;
 import com.github.kevinsawicki.wishlist.Toaster;
 import info.evelio.whatsnew.R;
 import info.evelio.whatsnew.model.ApplicationEntry;
+import info.evelio.whatsnew.task.UpdateChangeLog;
 import info.evelio.whatsnew.util.AppUtils;
 import info.evelio.whatsnew.util.ExtendedViewUpdater;
 import info.evelio.whatsnew.util.L;
 
 import static info.evelio.whatsnew.util.AppUtils.*;
-import static info.evelio.whatsnew.util.StringUtils.isEmpty;
+import static info.evelio.whatsnew.util.StringUtils.*;
 
 /**
  * @author Evelio Tarazona Cáceres <evelio@evelio.info>
  */
-public class DetailFragment extends SherlockFragment {
+public class DetailFragment extends SherlockFragment implements DetachableResultReceiver.Receiver {
   private static final String TAG = "wn:Detail";
 
   private static final int OTHER_ACTION_FLAGS = MenuItem.SHOW_AS_ACTION_ALWAYS;
   private static final int MY_ACTION_FLAGS = MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT;
 
   private ViewController mController = new ViewController();
+  private DetachableResultReceiver mReceiver;
+  private Handler mHandler = new Handler();
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -53,6 +60,7 @@ public class DetailFragment extends SherlockFragment {
 
   @Override
   public void onDestroyView() {
+    clearReceiver();
     mController.setFragment(null);
 
     super.onDestroyView();
@@ -134,7 +142,41 @@ public class DetailFragment extends SherlockFragment {
 
   public void display(String packageName) {
     mController.display(packageName);
-    getActivity().invalidateOptionsMenu();
+    final Activity activity = getActivity();
+    activity.invalidateOptionsMenu();
+
+    final Bundle params = new Bundle(1);
+    params.putString(UpdateChangeLog.PARAM_PACKAGE_NAME, packageName);
+    setupReceiver();
+    Groundy.create(activity.getApplicationContext(), UpdateChangeLog.class)
+        .params(params)
+        .receiver(mReceiver)
+        .execute();
+  }
+
+  private void setupReceiver() {
+    clearReceiver();
+    mReceiver = new DetachableResultReceiver(mHandler);
+    mReceiver.setReceiver(this);
+  }
+
+  private void clearReceiver() {
+    if (mReceiver != null) {
+      mReceiver.clearReceiver();
+      mReceiver = null;
+    }
+  }
+
+  @Override
+  public void onReceiveResult(int resultCode, Bundle resultData) {
+    L.d(TAG, "Got code " + resultCode + " " + bundle(resultData));
+    switch (resultCode) {
+      case Groundy.STATUS_FINISHED:
+        mController.updateChangeLog(resultData.getString(UpdateChangeLog.KEY_PACKAGE_NAME), resultData.getString(UpdateChangeLog.KEY_CHANGE_LOG));
+        break;
+      default:
+        break;
+    }
   }
 
   private String getCurrentPackage() {
@@ -152,10 +194,12 @@ public class DetailFragment extends SherlockFragment {
         R.id.app_detail_icon,
         R.id.app_detail_label,
         R.id.app_detail_version_label,
+        R.id.app_detail_change_log_text,
     };
     private DetailFragment mDetailFragment;
     private ExtendedViewUpdater mUpdater;
     private String mCurrentPackage;
+    private String mDefaultEmptyChangeLogMsg = "";
 
     private ViewController() {
     }
@@ -163,6 +207,9 @@ public class DetailFragment extends SherlockFragment {
     public void setFragment(DetailFragment fragment) {
       mDetailFragment = fragment;
       if (hasFragment()) {
+        if (isEmpty(mDefaultEmptyChangeLogMsg)) {
+          mDefaultEmptyChangeLogMsg = mDetailFragment.getString(R.string.empty_change_log);
+        }
         mUpdater = new ExtendedViewUpdater();
         mUpdater.initialize(mDetailFragment.getView(), sChilds);
       } else {
@@ -197,6 +244,7 @@ public class DetailFragment extends SherlockFragment {
         mUpdater.imageView(2).setImageDrawable(entry.getIcon());
         mUpdater.setText(3, entry.getDisplayableLabel());
         mUpdater.setText(4, entry.getDisplayableVersion());
+        setChangeLog(entry.getChangeLog());
       } catch (Exception e) {
         L.e(TAG, "Unable to display item with package " + mCurrentPackage, e);
         displayEmpty();
@@ -222,6 +270,21 @@ public class DetailFragment extends SherlockFragment {
     @Override
     public void onClick(View view) {
 
+    }
+
+    public void updateChangeLog(String givenPackage, String changeLog) {
+      if (!hasFragment() || mCurrentPackage == null || !mCurrentPackage.equalsIgnoreCase(givenPackage)) {
+        L.e(TAG, "Asked to update changelog but had no fragment or package didn't match "
+            + mCurrentPackage + " != " + givenPackage);
+        return;
+      }
+      setChangeLog(changeLog);
+    }
+
+    public void setChangeLog(String changeLog) {
+      changeLog = defaultIfEmpty(changeLog, mDefaultEmptyChangeLogMsg);
+      L.d(TAG, changeLog);
+      mUpdater.setText(5, Html.fromHtml(changeLog));
     }
   }
 }

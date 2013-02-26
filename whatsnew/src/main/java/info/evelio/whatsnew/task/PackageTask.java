@@ -4,6 +4,8 @@ import com.codeslap.groundy.GroundyTask;
 import com.codeslap.persistence.SqlAdapter;
 import info.evelio.whatsnew.helper.PersistenceHelper;
 import info.evelio.whatsnew.model.ApplicationEntry;
+import info.evelio.whatsnew.model.EntrySnapshot;
+import info.evelio.whatsnew.util.L;
 
 import static info.evelio.whatsnew.model.ApplicationEntry.Contract.COLUMN_PACKAGE_NAME;
 
@@ -31,6 +33,15 @@ public abstract class PackageTask extends GroundyTask {
   protected ApplicationEntry readApplicationEntry() {
     return getSqlAdapter()
         .findFirst(ApplicationEntry.class, WHERE_PACKAGE_NAME_EQUALS, new String[]{ getPackageName() });
+  }
+
+  protected void makeSnapshot(ApplicationEntry entry) {
+    try {
+      final EntrySnapshot snapshot = new EntrySnapshot.Builder().from(entry).build();
+      getSqlAdapter().store(snapshot);
+    } catch (Exception e) {
+      L.e("wn:PTask", "Unable to create snapshot for " + e, e);
+    }
   }
 
 }

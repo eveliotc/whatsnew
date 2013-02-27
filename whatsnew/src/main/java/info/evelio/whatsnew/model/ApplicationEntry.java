@@ -33,8 +33,8 @@ public class ApplicationEntry {
   private long packageVersionCode;
   @Column(Contract.COLUMN_PREVIOUS_PACKAGE_VERSION)
   private String previousPackageVersion;
-  @Column(value = Contract.COLUMN_PREVIOUS_PACKAGE_VERSION_CODE, defaultValue = "-1")
-  private long previousPackageVersionCode;
+  @Column(value = Contract.COLUMN_PREVIOUS_PACKAGE_VERSION_CODE)
+  private long previousPackageVersionCode = Contract.DEFAULT_PREVIOUS_VERSION;
   @Column(Contract.COLUMN_FIRST_INSTALL_TIME)
   private long firstInstallTime;
   @Column(Contract.COLUMN_LAST_UPDATE_TIME)
@@ -233,6 +233,7 @@ public class ApplicationEntry {
     String COLUMN_REMOVED = "removed";
     String COLUMN_CHANGE_LOG = "change_log";
 
+    long DEFAULT_PREVIOUS_VERSION = -1;
   }
 
   public static final class Builder {

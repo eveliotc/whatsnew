@@ -7,6 +7,7 @@ import info.evelio.whatsnew.R;
 import info.evelio.whatsnew.model.ApplicationEntry;
 
 import static android.text.Html.fromHtml;
+import static info.evelio.whatsnew.model.ApplicationEntry.Contract.DEFAULT_PREVIOUS_VERSION;
 import static info.evelio.whatsnew.util.StringUtils.hexColor;
 
 /**
@@ -37,7 +38,9 @@ public class ApplicationsAdapter extends SingleTypeAdapter<ApplicationEntry> {
     // Some packages just won't Set package version :\
     final CharSequence displayPackageVersion = item.getDisplayableVersion();
     CharSequence versionLabel;
-    if (item.getPackageVersionCode() > item.getPackageVersionCode()) { // We got upgraded
+    final long previousVersion = item.getPreviousPackageVersionCode();
+    if (previousVersion != DEFAULT_PREVIOUS_VERSION // Non default
+        && item.getPackageVersionCode() != previousVersion) { // We got replaced
       final int color = System.currentTimeMillis() - item.getLastUpdateTime() > NON_FRESH_TIME
           ? R.color.version_regular_text
           : R.color.version_upgraded_text;

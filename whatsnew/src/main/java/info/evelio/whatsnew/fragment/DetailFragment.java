@@ -140,18 +140,15 @@ public class DetailFragment extends SherlockFragment implements DetachableResult
     return didLaunch;
   }
 
-  public void display(String packageName) {
-    mController.display(packageName);
+  public void display(String packageName, String knownChangelog) {
+    mController.display(packageName, knownChangelog);
     final Activity activity = getActivity();
     activity.invalidateOptionsMenu();
 
-    final Bundle params = new Bundle(1);
-    params.putString(UpdateChangeLog.PARAM_PACKAGE_NAME, packageName);
-    setupReceiver();
-    Groundy.create(activity.getApplicationContext(), UpdateChangeLog.class)
-        .params(params)
-        .receiver(mReceiver)
-        .execute();
+    if (isEmpty(knownChangelog)) { //Forced update
+      setupReceiver();
+      UpdateChangeLog.execute(activity.getApplicationContext(), packageName, mReceiver);
+    }
   }
 
   private void setupReceiver() {
@@ -183,8 +180,8 @@ public class DetailFragment extends SherlockFragment implements DetachableResult
     return mController.getCurrentPackage();
   }
 
-  public static void display(FragmentManager fm, String packageName) {
-    ((DetailFragment) fm.findFragmentById(R.id.fragment_app_detail)).display(packageName);
+  public static void display(FragmentManager fm, String packageName, String knownChangeLog) {
+    ((DetailFragment) fm.findFragmentById(R.id.fragment_app_detail)).display(packageName, knownChangeLog);
   }
 
   private static class ViewController implements View.OnClickListener {
@@ -200,6 +197,7 @@ public class DetailFragment extends SherlockFragment implements DetachableResult
     private ExtendedViewUpdater mUpdater;
     private String mCurrentPackage;
     private String mDefaultEmptyChangeLogMsg = "";
+    private String mKnownChangeLog;
 
     private ViewController() {
     }
@@ -221,11 +219,12 @@ public class DetailFragment extends SherlockFragment implements DetachableResult
       return mDetailFragment != null;
     }
 
-    public void display(String packageName) {
+    public void display(String packageName, String knownChangelog) {
       if (!hasFragment()) {
         return;
       }
       mCurrentPackage = packageName;
+      mKnownChangeLog = knownChangelog;
       if (isEmpty(packageName)) {
         displayEmpty();
       } else {
@@ -244,7 +243,7 @@ public class DetailFragment extends SherlockFragment implements DetachableResult
         mUpdater.imageView(2).setImageDrawable(entry.getIcon());
         mUpdater.setText(3, entry.getDisplayableLabel());
         mUpdater.setText(4, entry.getDisplayableVersion());
-        setChangeLog(entry.getChangeLog());
+        setChangeLog(mKnownChangeLog);
       } catch (Exception e) {
         L.e(TAG, "Unable to display item with package " + mCurrentPackage, e);
         displayEmpty();

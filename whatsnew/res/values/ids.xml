@@ -8,4 +8,5 @@
   <item name="menu_item_store" type="id"/>
   <item name="menu_item_uninstall" type="id"/>
   <item name="menu_item_info" type="id"/>
+  <item name="update_notification" type="id"/>
 </resources>

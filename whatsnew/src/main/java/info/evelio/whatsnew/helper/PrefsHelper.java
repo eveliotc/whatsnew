@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
  */
 public class PrefsHelper {
   public static final String BOOLEAN_FIRST_IMPORT_DONE = "first_time_import_done";
+  public static final String BOOLEAN_NOTIFICATIONS_ENABLED = "notifications_enabled";
 
   private SharedPreferences mPrefs;
 
@@ -21,6 +22,10 @@ public class PrefsHelper {
   }
 
   public boolean getBool(String key) {
-    return mPrefs.getBoolean(key, false);
+    return getBool(key, false);
+  }
+
+  public boolean getBool(String key, boolean defaultValue) {
+    return mPrefs.getBoolean(key, defaultValue);
   }
 }

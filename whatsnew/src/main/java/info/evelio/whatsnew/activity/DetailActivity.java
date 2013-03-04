@@ -11,6 +11,8 @@ import info.evelio.whatsnew.fragment.DetailFragment;
  */
 public class DetailActivity extends BaseActivity {
   private static final String EXTRA_PACKAGE_NAME = "info.evelio.whatsnew.PACKAGE_NAME";
+  private static final String EXTRA_KNOWN_CHANGE_LOG = "info.evelio.whatsnew.KNOWN_CHANGE_LOG";
+
   @Override
   protected final void onCreate(final Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -19,7 +21,10 @@ public class DetailActivity extends BaseActivity {
 
     setContentView(R.layout.activity_detail);
 
-    DetailFragment.display(getSupportFragmentManager(), getIntent().getStringExtra(EXTRA_PACKAGE_NAME));
+    Intent intent = getIntent();
+    DetailFragment.display(getSupportFragmentManager(),
+        intent.getStringExtra(EXTRA_PACKAGE_NAME),
+        intent.getStringExtra(EXTRA_KNOWN_CHANGE_LOG));
   }
 
   private void setupActionBar() {
@@ -27,9 +32,10 @@ public class DetailActivity extends BaseActivity {
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
   }
 
-  public static void start(Activity activity, String packageName) {
+  public static void start(Activity activity, String packageName, String knownChangeLog) {
     Intent startMe = new Intent(activity, DetailActivity.class);
     startMe.putExtra(EXTRA_PACKAGE_NAME, packageName);
+    startMe.putExtra(EXTRA_KNOWN_CHANGE_LOG, knownChangeLog);
     activity.startActivity(startMe);
   }
 }

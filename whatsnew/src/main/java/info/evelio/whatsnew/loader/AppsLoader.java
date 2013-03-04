@@ -1,19 +1,15 @@
 package info.evelio.whatsnew.loader;
 
 import android.content.Context;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import com.codeslap.groundy.loader.SupportListLoader;
-import com.codeslap.persistence.Constraint;
 import com.codeslap.persistence.SqlAdapter;
+import info.evelio.whatsnew.helper.AppListHelper;
 import info.evelio.whatsnew.helper.PersistenceHelper;
 import info.evelio.whatsnew.model.ApplicationEntry;
-import info.evelio.whatsnew.util.L;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static info.evelio.whatsnew.util.StringUtils.isEmpty;
 
 /**
  * @author Evelio Tarazona Cáceres <evelio@evelio.info>
@@ -21,44 +17,20 @@ import static info.evelio.whatsnew.util.StringUtils.isEmpty;
 public class AppsLoader extends SupportListLoader<ApplicationEntry> {
   private static final String TAG = "wn:AL";
   private PackageManager mPackageManager;
-  private Constraint mOrderConstraint;
-  private ApplicationEntry mEmptyInstance;
 
   public AppsLoader(Context context) {
     super(context);
     mPackageManager = context.getApplicationContext().getPackageManager();
-    mOrderConstraint = new Constraint().orderBy(ApplicationEntry.Contract.COLUMN_LAST_UPDATE_TIME + " DESC");
-    mEmptyInstance = new ApplicationEntry();
   }
 
   @Override
   protected List<ApplicationEntry> getData() {
     final Context context = getContext();
     final SqlAdapter adapter = PersistenceHelper.getAdapter(context);
-    final List<ApplicationEntry> persisted = adapter.findAll(mEmptyInstance, mOrderConstraint);
+    final List<ApplicationEntry> persisted = adapter.findAll(ApplicationEntry.class, AppListHelper.NON_REMOVED, null);
     final List<ApplicationEntry> filtered = new ArrayList<ApplicationEntry>(persisted.size());
-    if (persisted != null) {
-      for (ApplicationEntry entry : persisted) {
-        if (goodEnough(entry)) {
-          filtered.add(entry);
-        }
-      }
-    }
+    AppListHelper.filterAndLoad(persisted, filtered, mPackageManager);
     return filtered;
   }
 
-  private boolean goodEnough(ApplicationEntry entry) {
-    if (entry == null || isEmpty(entry.getPackageName()) || entry.isRemoved()) {
-      return false;
-    }
-    final PackageManager pm = mPackageManager;
-    try {
-      final PackageInfo packageInfo = pm.getPackageInfo(entry.getPackageName(), 0);
-      entry.loadResources(pm, packageInfo.applicationInfo);
-      return true;
-    } catch (Exception e) {
-      L.e(TAG, "Invalid package found", e);
-    }
-    return false;
-  }
 }

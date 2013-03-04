@@ -31,7 +31,7 @@ public class AppListFragment extends SherlockListFragment implements DetachableR
   private boolean mIsMultiPane = false;
 
   private final static AppItemCallback sNoOpCallback = new AppItemCallback() {
-    @Override public void onItemSelected(String packageName) {}
+    @Override public void onItemSelected(String packageName, String knownChangeLog) {}
   };
   private AppItemCallback mItemCallback = sNoOpCallback;
 
@@ -76,7 +76,8 @@ public class AppListFragment extends SherlockListFragment implements DetachableR
   public void onListItemClick(ListView l, View v, int position, long id) {
     Object item = l.getAdapter().getItem(position);
     if (item instanceof ApplicationEntry) {
-      mItemCallback.onItemSelected(((ApplicationEntry)item).getPackageName());
+      ApplicationEntry entry = (ApplicationEntry) item;
+      mItemCallback.onItemSelected(entry.getPackageName(), entry.getChangeLog());
     } else {
       L.wtf(TAG, "Got non type item " + item + " at position " + position);
     }
@@ -128,6 +129,6 @@ public class AppListFragment extends SherlockListFragment implements DetachableR
   }
 
   public interface AppItemCallback {
-    void onItemSelected(String packageName);
+    void onItemSelected(String packageName, String knownChangeLog);
   }
 }

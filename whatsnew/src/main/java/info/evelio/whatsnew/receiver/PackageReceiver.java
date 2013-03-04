@@ -25,15 +25,9 @@ public class PackageReceiver extends BroadcastReceiver {
   private final static Map<String, ResolveTask> sTasks;
   static {
     sTasks = new HashMap<String, ResolveTask>(3);
-    sTasks.put(Intent.ACTION_PACKAGE_ADDED, new PackageResolveTask(PackageAdd.class));
+    sTasks.put(Intent.ACTION_PACKAGE_ADDED, new NonReplacingPackageResolveTask(PackageAdd.class));
     sTasks.put(Intent.ACTION_PACKAGE_REPLACED, new PackageResolveTask(PackageReplace.class));
-    sTasks.put(Intent.ACTION_PACKAGE_REMOVED, new PackageResolveTask(PackageRemove.class) {
-      @Override
-      public boolean canPerformWith(Intent intent) {
-        // For Uninstall we confirm that is not replacing, ACTION_PACKAGE_REPLACED will be sent after
-        return super.canPerformWith(intent) && !intent.getBooleanExtra(Intent.EXTRA_REPLACING, false);
-      }
-    });
+    sTasks.put(Intent.ACTION_PACKAGE_REMOVED, new RemovePackageResolveTask(PackageRemove.class));
   }
 
 
@@ -75,6 +69,28 @@ public class PackageReceiver extends BroadcastReceiver {
 
     public Bundle buildParams(Intent intent) {
       return Bundle.EMPTY;
+    }
+  }
+
+  private static class RemovePackageResolveTask extends NonReplacingPackageResolveTask {
+    RemovePackageResolveTask(Class<? extends GroundyTask> datClass) {
+      super(datClass);
+    }
+
+    @Override
+    public boolean canPerformWith(Intent intent) {
+      return intent != null && intent.getBooleanExtra(Intent.EXTRA_DATA_REMOVED, false) && super.canPerformWith(intent);
+    }
+  }
+
+  private static class NonReplacingPackageResolveTask extends PackageResolveTask {
+    NonReplacingPackageResolveTask(Class<? extends GroundyTask> datClass) {
+      super(datClass);
+    }
+
+    @Override
+    public boolean canPerformWith(Intent intent) {
+      return super.canPerformWith(intent) && !intent.getBooleanExtra(Intent.EXTRA_REPLACING, false);
     }
   }
 

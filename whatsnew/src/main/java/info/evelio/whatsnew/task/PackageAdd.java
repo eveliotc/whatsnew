@@ -8,16 +8,22 @@ import info.evelio.whatsnew.util.L;
  * @author Evelio Tarazona Cáceres <evelio@evelio.info>
  */
 public class PackageAdd extends PackageTask {
+  private static final String TAG = "wn:PAdd";
+
   @Override
   protected boolean doInBackground() {
     final String packageName = getPackageName();
+    L.d(TAG, "Adding package " + packageName);
     final Context context = getContext();
     final ApplicationEntry.Builder builder = new ApplicationEntry.Builder(context.getPackageManager());
     final ApplicationEntry entry = builder.forPackage(packageName).build();
     if (entry.hasValidPackageName()) {
-      return getSqlAdapter().store(entry) != null;
+      L.d(TAG, "Storing " + entry);
+      boolean result = getSqlAdapter().store(entry) != null;
+      updateChangeLogAsync();
+      return result;
     } else {
-      L.e("wn:PAdd", "Builder got invalid package");
+      L.e(TAG, "Builder got invalid package");
     }
     return false;
   }

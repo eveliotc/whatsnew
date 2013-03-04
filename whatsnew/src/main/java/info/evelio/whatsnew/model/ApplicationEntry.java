@@ -10,9 +10,7 @@ import info.evelio.whatsnew.util.L;
 
 import java.io.File;
 
-import static info.evelio.whatsnew.util.StringUtils.defaultIfEmpty;
-import static info.evelio.whatsnew.util.StringUtils.emptyIfNull;
-import static info.evelio.whatsnew.util.StringUtils.isNotEmpty;
+import static info.evelio.whatsnew.util.StringUtils.*;
 
 /**
  * Full entry for certain ap even if it was removed
@@ -281,12 +279,30 @@ public class ApplicationEntry {
       return from(resolvedInfo.serviceInfo);
     }
 
+    /**
+     * Retrieve previous version name and code for given package
+     *
+     * NOTE: You still have to call {@link #forPackage(String)} to set the package to use
+     *
+     * @param previous
+     * @return
+     * this Builder
+     */
     public Builder with(final ApplicationEntry previous) {
       mPrevious = previous;
       return this;
     }
 
+    /**
+     * Build application entry instance
+     * @throws IllegalArgumentException if given package name is invalid
+     * @return
+     * New instance with given arguments
+     */
     public ApplicationEntry build() {
+      if (isEmpty(mPackageName)) {
+        throw new IllegalArgumentException("Invalid or empty package name");
+      }
       ApplicationEntry appEntry = new ApplicationEntry();
       appEntry.setPackageName(mPackageName);
 
@@ -303,7 +319,7 @@ public class ApplicationEntry {
 
         if (mPrevious != null) {
           appEntry.setPreviousPackageVersion( mPrevious.getPackageVersion() );
-          appEntry.setPreviousPackageVersionCode( mPrevious.getPreviousPackageVersionCode() );
+          appEntry.setPreviousPackageVersionCode( mPrevious.getPackageVersionCode() );
         }
 
         if (mTryLoadResources) {

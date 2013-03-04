@@ -17,4 +17,5 @@
   <string name="error_unable_to_launch_uninstall">Unable to launch uninstall activity</string>
   <string name="error_unable_to_launch_store">Unable to launch Application Store</string>
   <string name="empty_change_log">No what\'s new found :(</string>
+  <string name="some_apps_were_updated">Some apps were updated.</string>
 </resources>

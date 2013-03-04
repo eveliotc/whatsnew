@@ -28,11 +28,11 @@ public class MainActivity extends BaseActivity implements AppListFragment.AppIte
   }
 
   @Override
-  public void onItemSelected(String packageName) {
+  public void onItemSelected(String packageName, String knownChangeLog) {
     if (mMultiPane) {
-      DetailFragment.display(getSupportFragmentManager(), packageName);
+      DetailFragment.display(getSupportFragmentManager(), packageName, knownChangeLog);
     } else {
-      DetailActivity.start(this, packageName);
+      DetailActivity.start(this, packageName, knownChangeLog);
     }
   }
 

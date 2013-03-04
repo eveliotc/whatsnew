@@ -1,6 +1,9 @@
 package info.evelio.whatsnew.task;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.os.ResultReceiver;
+import com.codeslap.groundy.Groundy;
 import info.evelio.whatsnew.R;
 import info.evelio.whatsnew.helper.CrawlingHelper;
 import info.evelio.whatsnew.model.ApplicationEntry;
@@ -17,10 +20,11 @@ public class UpdateChangeLog extends PackageTask {
 
   @Override
   protected boolean doInBackground() {
+    if (!isOnline()) {
+      return false;
+    }
     final String packageName = getPackageName();
-    L.d("wn:PUCL", "pkg:"+packageName);
     addStringResult(KEY_PACKAGE_NAME, packageName);
-    L.d("wn:PUCL", "resultPkg:"+getResultData().getString(KEY_PACKAGE_NAME));
     final Context context = getContext();
     CrawlingHelper helper = new CrawlingHelper(context.getString(R.string.crawling_lang_code));
 
@@ -34,11 +38,22 @@ public class UpdateChangeLog extends PackageTask {
 
     if (isNotEmpty(changeLog)) {
       final ApplicationEntry entry = readApplicationEntry();
-      makeSnapshot(entry);
-      entry.setChangeLog(changeLog);
-      getSqlAdapter().store(entry);
+      if (!changeLog.equals(entry.getChangeLog())) { // Only update if different
+        makeSnapshot(entry);
+        entry.setChangeLog(changeLog);
+        getSqlAdapter().update(entry, WHERE_PACKAGE_NAME_EQUALS, new String[]{ packageName });
+      }
     }
     addStringResult(KEY_CHANGE_LOG, changeLog);
     return true;
+  }
+
+  public static void execute(Context context, String packageName, ResultReceiver receiver) {
+    final Bundle params = new Bundle(1);
+    params.putString(UpdateChangeLog.PARAM_PACKAGE_NAME, packageName);
+    Groundy.create(context, UpdateChangeLog.class)
+        .params(params)
+        .receiver(receiver)
+        .execute();
   }
 }

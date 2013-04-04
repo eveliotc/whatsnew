@@ -2,8 +2,8 @@ package info.evelio.whatsnew.loader;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
-import com.codeslap.groundy.loader.SupportListLoader;
 import com.codeslap.persistence.SqlAdapter;
+import com.telly.groundy.loader.SupportListLoader;
 import info.evelio.whatsnew.helper.AppListHelper;
 import info.evelio.whatsnew.helper.PersistenceHelper;
 import info.evelio.whatsnew.model.ApplicationEntry;

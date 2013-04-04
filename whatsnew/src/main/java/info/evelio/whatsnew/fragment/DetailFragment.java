@@ -13,9 +13,9 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.codeslap.groundy.DetachableResultReceiver;
-import com.codeslap.groundy.Groundy;
 import com.github.kevinsawicki.wishlist.Toaster;
+import com.telly.groundy.DetachableResultReceiver;
+import com.telly.groundy.Groundy;
 import info.evelio.whatsnew.R;
 import info.evelio.whatsnew.model.ApplicationEntry;
 import info.evelio.whatsnew.task.UpdateChangeLog;
@@ -168,8 +168,15 @@ public class DetailFragment extends SherlockFragment implements DetachableResult
   public void onReceiveResult(int resultCode, Bundle resultData) {
     L.d(TAG, "Got code " + resultCode + " " + bundle(resultData));
     switch (resultCode) {
+      case Groundy.STATUS_RUNNING:
+      case Groundy.STATUS_PROGRESS:
+        mController.displayProgress(true);
+        break;
       case Groundy.STATUS_FINISHED:
         mController.updateChangeLog(resultData.getString(UpdateChangeLog.KEY_PACKAGE_NAME), resultData.getString(UpdateChangeLog.KEY_CHANGE_LOG));
+        break;
+      case Groundy.STATUS_ERROR:
+        mController.displayProgress(false);
         break;
       default:
         break;
@@ -278,12 +285,20 @@ public class DetailFragment extends SherlockFragment implements DetachableResult
         return;
       }
       setChangeLog(changeLog);
+      displayProgress(false);
     }
 
     public void setChangeLog(String changeLog) {
       changeLog = defaultIfEmpty(changeLog, mDefaultEmptyChangeLogMsg);
       L.d(TAG, changeLog);
       mUpdater.setText(5, Html.fromHtml(changeLog));
+    }
+
+    public void displayProgress(boolean display) {
+      if (hasFragment()) {
+        L.d(TAG, display ? "Showing progress indicator" : "Hiding progress indicator");
+        mDetailFragment.getSherlockActivity().setSupportProgressBarIndeterminateVisibility(display);
+      }
     }
   }
 }

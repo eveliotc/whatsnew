@@ -33,9 +33,9 @@
       <type>apklib</type>
     </dependency>
     <dependency>
-      <groupId>com.codeslap</groupId>
+      <groupId>com.telly</groupId>
       <artifactId>groundy</artifactId>
-      <version>0.7</version>
+      <version>0.8</version>
       <scope>compile</scope>
     </dependency>
     <dependency>

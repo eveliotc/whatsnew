@@ -1,7 +1,7 @@
 package info.evelio.whatsnew.task;
 
 import android.content.Context;
-import com.codeslap.groundy.Groundy;
+import com.telly.groundy.Groundy;
 import info.evelio.whatsnew.helper.AppListHelper;
 import info.evelio.whatsnew.helper.NotificationHelper;
 import info.evelio.whatsnew.model.ApplicationEntry;

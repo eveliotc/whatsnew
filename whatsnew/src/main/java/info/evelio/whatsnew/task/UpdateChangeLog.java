@@ -3,7 +3,7 @@ package info.evelio.whatsnew.task;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.ResultReceiver;
-import com.codeslap.groundy.Groundy;
+import com.telly.groundy.Groundy;
 import info.evelio.whatsnew.R;
 import info.evelio.whatsnew.helper.CrawlingHelper;
 import info.evelio.whatsnew.model.ApplicationEntry;

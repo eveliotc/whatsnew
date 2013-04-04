@@ -2,7 +2,7 @@ package info.evelio.whatsnew.task;
 
 import android.content.Context;
 import android.content.pm.ResolveInfo;
-import com.codeslap.groundy.GroundyTask;
+import com.telly.groundy.GroundyTask;
 import info.evelio.whatsnew.helper.PersistenceHelper;
 import info.evelio.whatsnew.helper.PrefsHelper;
 import info.evelio.whatsnew.model.ApplicationEntry;

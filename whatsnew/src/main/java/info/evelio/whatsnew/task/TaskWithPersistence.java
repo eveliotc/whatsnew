@@ -1,7 +1,7 @@
 package info.evelio.whatsnew.task;
 
-import com.codeslap.groundy.GroundyTask;
 import com.codeslap.persistence.SqlAdapter;
+import com.telly.groundy.GroundyTask;
 import info.evelio.whatsnew.helper.PersistenceHelper;
 
 /**

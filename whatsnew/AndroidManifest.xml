@@ -63,7 +63,7 @@
         <action android:name="android.intent.action.EXTERNAL_APPLICATIONS_UNAVAILABLE"/>
       </intent-filter>
     </receiver>
-    <service android:name="com.codeslap.groundy.GroundyService" android:exported="false">
+    <service android:name="com.telly.groundy.GroundyService" android:exported="false">
       <meta-data
           android:name="groundy:mode"
           android:value="async"/>

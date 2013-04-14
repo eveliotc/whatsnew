@@ -28,7 +28,8 @@ public class PackageReplace extends PackageTask {
 
     makeSnapshot(oldEntry);
     L.d(TAG, "Updating " + applicationEntry);
-    boolean result = getSqlAdapter().update(applicationEntry, oldEntry) == 1;
+    boolean result = getSqlAdapter().update(applicationEntry,
+        WHERE_PACKAGE_NAME_EQUALS, new String[]{ packageName }) == 1;
 
     updateChangeLogAsync();
 
